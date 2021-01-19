@@ -4,7 +4,7 @@ var dog, happyDog, database, foodS, foodStock;
 
 function preload(){
   dogImage1 = loadImage("images/dogImg.png");
-  dogImage2 = loadImage("images/dogImg.png");
+  dogImage2 = loadImage("images/dogImg1.png");
 }
 
 function setup() {
@@ -15,7 +15,7 @@ function setup() {
 
   database = firebase.database();
 
-  foodStock=database.ref('Food');
+  foodStock=database.ref('food');
   foodStock.on("value",readStock);
 }
 
@@ -23,24 +23,30 @@ function draw() {
   background(46,139,87);
   fill("black");
   stroke(50);
-  text("Press the up arrow to feed the dog!",200,100);
+  text("Press the up arrow to feed the dog!",50,100);
+  text("Food: "+foodS,50,120);
 
   if(keyWentDown(UP_ARROW)){
     writeStock(foodS);
+    foodS = foodS-1;
     dog.addImage(dogImage2);
+  } if(keyWentUp(UP_ARROW)){
+    dog.addImage(dogImage1);
   }
 
   drawSprites();
   //add styles here
+
+  //console.log(foodS);
 }
 
-function readStock(){
+function readStock(data){
   foodS = data.val();
 }
 
-function writeStock(){
+function writeStock(x){
   database.ref('/').update({
-    Food:x
+    food:x
   })
 }
 
